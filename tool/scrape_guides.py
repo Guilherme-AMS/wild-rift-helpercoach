@@ -72,9 +72,9 @@ def parse(h: str) -> dict | None:
     return {
         "name": name,
         "role": html.unescape(role.group(1)).strip() if role else "",
-        "siteTier": tier.group(1).upper() if tier else "",
-        "counteredBy": names(countered, r"<span>([^<]+)</span>"),
-        "synergy": names(synergy, r"<span>([^<]+)</span>"),
+        "siteTier": tier.group(1).upper().replace("PLUS", "+") if tier else "",
+        "counteredBy": names(countered, r'href="/guide/[^"]+"[^>]*title="([^"]+)"'),
+        "synergy": names(synergy, r'href="/guide/[^"]+"[^>]*title="([^"]+)"'),
         "items": {k: item_secs[k] for k in ("starting", "core", "boots", "final") if k in item_secs},
         "spells": spell_secs.get("spells", []),
         "runes": spell_secs.get("runes", []),
