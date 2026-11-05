@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show MethodChannel, rootBundle;
 
 /// URL de onde o app tenta baixar dados mais novos ao abrir.
 /// Aponta para o meta.json do próprio repositório no GitHub.
@@ -76,6 +76,9 @@ class MetaData {
   final String source;
   final List<ChampStat> stats;
 
+  /// JSON original, repassado para a bolha flutuante.
+  String raw = '';
+
   /// Pontuação: win rate pesa mais; pick e ban mostram força no meta.
   void _computeTiers() {
     for (final s in stats) {
@@ -120,7 +123,7 @@ class MetaData {
 
 Future<MetaData> loadBundled() async {
   final raw = await rootBundle.loadString('assets/meta.json');
-  return MetaData.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+  return MetaData.fromJson(jsonDecode(raw) as Map<String, dynamic>)..raw = raw;
 }
 
 Future<MetaData?> loadRemote() async {
@@ -132,7 +135,7 @@ Future<MetaData?> loadRemote() async {
     if (res.statusCode != 200) return null;
     final body = await res.transform(utf8.decoder).join();
     client.close();
-    return MetaData.fromJson(jsonDecode(body) as Map<String, dynamic>);
+    return MetaData.fromJson(jsonDecode(body) as Map<String, dynamic>)..raw = body;
   } catch (_) {
     return null;
   }
@@ -183,6 +186,59 @@ class _HomePageState extends State<HomePage> {
     await _refresh(silent: true);
   }
 
+  static const _overlay = MethodChannel('rift/overlay');
+
+  Future<void> _openBubble() async {
+    final data = _data;
+    if (data == null) return;
+    try {
+      final canDraw = await _overlay.invokeMethod<bool>('canDraw') ?? false;
+      if (!canDraw) {
+        if (!mounted) return;
+        final ok = await showDialog<bool>(
+          context: context,
+          builder: (c) => AlertDialog(
+            title: const Text('Bolha sobre o jogo'),
+            content: const Text(
+                'Para mostrar a bolha por cima do Wild Rift, ative "Sobrepor a outros apps" para o Rift Helper na tela que vai abrir. Depois volte e toque na bolha de novo.'),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(c, false),
+                  child: const Text('Agora não')),
+              FilledButton(
+                  onPressed: () => Navigator.pop(c, true),
+                  child: const Text('Abrir ajustes')),
+            ],
+          ),
+        );
+        if (ok == true) await _overlay.invokeMethod('requestPermission');
+        return;
+      }
+      await _overlay.invokeMethod('start', {'json': data.raw});
+      if (!mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (c) => AlertDialog(
+          title: const Text('Bolha ativada'),
+          content: const Text(
+              '1. Abra o Wild Rift.\n'
+              '2. Na seleção de campeões, toque na bolha RH e em "Ler draft".\n'
+              '3. Autorize a gravação escolhendo a tela inteira.\n\n'
+              'A gravação desliga sozinha quando os 10 campeões aparecem, depois de 4 minutos, ou em "Parar". '
+              'Arraste a bolha para mudar de lugar; segure para fechar.'),
+          actions: [
+            FilledButton(
+                onPressed: () => Navigator.pop(c), child: const Text('Entendi')),
+          ],
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Não foi possível abrir a bolha: $e')));
+    }
+  }
+
   Future<void> _refresh({bool silent = false}) async {
     setState(() => _updating = true);
     final remote = await loadRemote();
@@ -215,6 +271,11 @@ class _HomePageState extends State<HomePage> {
                     style: Theme.of(context).textTheme.labelLarge),
               ),
             ),
+          IconButton(
+            tooltip: 'Bolha sobre o jogo',
+            onPressed: data == null ? null : _openBubble,
+            icon: const Icon(Icons.bubble_chart),
+          ),
           IconButton(
             tooltip: 'Atualizar dados',
             onPressed: _updating ? null : () => _refresh(),
@@ -868,7 +929,7 @@ class AboutPage extends StatelessWidget {
         Text('Limitações', style: t.titleMedium),
         const SizedBox(height: 6),
         const Text(
-            'A Riot não oferece API pública do Wild Rift, então o app não lê sua partida ao vivo nem busca perfis de jogadores. As sugestões do draft usam as estatísticas gerais do patch, não confrontos diretos.'),
+            'A Riot não oferece API pública do Wild Rift, então o app não busca perfis de jogadores. Na bolha, o draft é lido pela tela só quando você toca em "Ler draft", reconhecendo os nomes dos campeões nas colunas dos times; os bans não são lidos. As sugestões usam as estatísticas gerais do patch, não confrontos diretos.'),
         const SizedBox(height: 20),
         Text(
             'Projeto de fã, sem vínculo com a Riot Games. League of Legends: Wild Rift é marca da Riot Games, Inc.',
