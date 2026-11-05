@@ -7,7 +7,8 @@ import 'package:flutter/services.dart' show rootBundle;
 /// URL de onde o app tenta baixar dados mais novos ao abrir.
 /// Aponta para o meta.json do próprio repositório no GitHub.
 /// Se ficar vazio ou falhar, o app usa os dados embutidos.
-const String kRemoteDataUrl = '';
+const String kRemoteDataUrl =
+    'https://raw.githubusercontent.com/Guilherme-AMS/wild-rift-helpercoach/main/assets/meta.json';
 
 void main() => runApp(const WildRiftApp());
 
