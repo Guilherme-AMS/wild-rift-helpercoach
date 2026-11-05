@@ -1,0 +1,30 @@
+name: Atualizar counters e builds
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 9 * * 1'   # toda segunda, 06:17 em Brasília
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Coletar dados do WildRiftFire
+        run: python3 tool/scrape_guides.py assets/guides.json
+
+      - name: Salvar no repositório
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/guides.json
+          if git diff --cached --quiet; then
+            echo "Sem mudanças"
+          else
+            git commit -m "Atualiza counters e builds ($(date +%F))"
+            git push
+          fi
