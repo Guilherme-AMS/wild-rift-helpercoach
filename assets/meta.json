@@ -1,0 +1,1267 @@
+{
+ "patch": "7.3e",
+ "updated": "2026-11-05",
+ "source": "WildRiftFire (dados do servidor chinês)",
+ "stats": [
+  {
+   "name": "Shen",
+   "lane": "Baron",
+   "win": 55.37,
+   "pick": 2.77,
+   "ban": 0.96
+  },
+  {
+   "name": "Smolder",
+   "lane": "Duo",
+   "win": 53.02,
+   "pick": 10.73,
+   "ban": 5.2
+  },
+  {
+   "name": "Malphite",
+   "lane": "Baron",
+   "win": 52.58,
+   "pick": 6.57,
+   "ban": 41.22
+  },
+  {
+   "name": "Rammus",
+   "lane": "Jungle",
+   "win": 56.05,
+   "pick": 4.43,
+   "ban": 6.67
+  },
+  {
+   "name": "Amumu",
+   "lane": "Jungle",
+   "win": 55.26,
+   "pick": 2.54,
+   "ban": 0.09
+  },
+  {
+   "name": "Skarner",
+   "lane": "Jungle",
+   "win": 54.04,
+   "pick": 1.59,
+   "ban": 0.49
+  },
+  {
+   "name": "Ambessa",
+   "lane": "Jungle",
+   "win": 53.36,
+   "pick": 1.61,
+   "ban": 1.18
+  },
+  {
+   "name": "Braum",
+   "lane": "Support",
+   "win": 52.88,
+   "pick": 4.69,
+   "ban": 1.5
+  },
+  {
+   "name": "Sona",
+   "lane": "Support",
+   "win": 52.82,
+   "pick": 3.13,
+   "ban": 0.29
+  },
+  {
+   "name": "Kog'Maw",
+   "lane": "Duo",
+   "win": 52.6,
+   "pick": 2.78,
+   "ban": 0.23
+  },
+  {
+   "name": "Nocturne",
+   "lane": "Jungle",
+   "win": 52.45,
+   "pick": 6.74,
+   "ban": 60.18
+  },
+  {
+   "name": "Ashe",
+   "lane": "Duo",
+   "win": 52.33,
+   "pick": 6.48,
+   "ban": 0.18
+  },
+  {
+   "name": "Ekko",
+   "lane": "Jungle",
+   "win": 52.29,
+   "pick": 3.3,
+   "ban": 2.96
+  },
+  {
+   "name": "Janna",
+   "lane": "Support",
+   "win": 52.15,
+   "pick": 2.33,
+   "ban": 0.22
+  },
+  {
+   "name": "Ambessa",
+   "lane": "Baron",
+   "win": 52.13,
+   "pick": 2.64,
+   "ban": 1.18
+  },
+  {
+   "name": "Orianna",
+   "lane": "Mid",
+   "win": 52.12,
+   "pick": 6.37,
+   "ban": 0.45
+  },
+  {
+   "name": "Jarvan IV",
+   "lane": "Jungle",
+   "win": 52.11,
+   "pick": 7.16,
+   "ban": 0.56
+  },
+  {
+   "name": "Hwei",
+   "lane": "Mid",
+   "win": 52.08,
+   "pick": 5.46,
+   "ban": 41.81
+  },
+  {
+   "name": "Lillia",
+   "lane": "Jungle",
+   "win": 52.02,
+   "pick": 3.0,
+   "ban": 1.0
+  },
+  {
+   "name": "Leona",
+   "lane": "Support",
+   "win": 51.94,
+   "pick": 10.71,
+   "ban": 8.15
+  },
+  {
+   "name": "Lissandra",
+   "lane": "Mid",
+   "win": 51.69,
+   "pick": 4.43,
+   "ban": 5.65
+  },
+  {
+   "name": "Galio",
+   "lane": "Mid",
+   "win": 51.68,
+   "pick": 10.78,
+   "ban": 3.8
+  },
+  {
+   "name": "Rell",
+   "lane": "Support",
+   "win": 51.62,
+   "pick": 3.23,
+   "ban": 1.46
+  },
+  {
+   "name": "Kassadin",
+   "lane": "Mid",
+   "win": 51.6,
+   "pick": 1.61,
+   "ban": 0.45
+  },
+  {
+   "name": "Syndra",
+   "lane": "Mid",
+   "win": 51.58,
+   "pick": 6.37,
+   "ban": 17.78
+  },
+  {
+   "name": "Soraka",
+   "lane": "Support",
+   "win": 51.54,
+   "pick": 4.73,
+   "ban": 1.74
+  },
+  {
+   "name": "Galio",
+   "lane": "Support",
+   "win": 51.43,
+   "pick": 2.82,
+   "ban": 3.8
+  },
+  {
+   "name": "Aurelion Sol",
+   "lane": "Mid",
+   "win": 51.42,
+   "pick": 5.7,
+   "ban": 2.67
+  },
+  {
+   "name": "Mordekaiser",
+   "lane": "Baron",
+   "win": 51.32,
+   "pick": 10.49,
+   "ban": 34.64
+  },
+  {
+   "name": "Gwen",
+   "lane": "Baron",
+   "win": 51.2,
+   "pick": 3.25,
+   "ban": 4.25
+  },
+  {
+   "name": "Nami",
+   "lane": "Support",
+   "win": 51.11,
+   "pick": 4.05,
+   "ban": 0.11
+  },
+  {
+   "name": "K'Sante",
+   "lane": "Baron",
+   "win": 51.11,
+   "pick": 7.94,
+   "ban": 19.13
+  },
+  {
+   "name": "Thresh",
+   "lane": "Support",
+   "win": 51.08,
+   "pick": 15.42,
+   "ban": 13.94
+  },
+  {
+   "name": "Xayah",
+   "lane": "Duo",
+   "win": 51.06,
+   "pick": 5.21,
+   "ban": 0.26
+  },
+  {
+   "name": "Cho'Gath",
+   "lane": "Baron",
+   "win": 50.94,
+   "pick": 8.79,
+   "ban": 35.19
+  },
+  {
+   "name": "Jax",
+   "lane": "Baron",
+   "win": 50.93,
+   "pick": 3.19,
+   "ban": 0.49
+  },
+  {
+   "name": "Kai'Sa",
+   "lane": "Duo",
+   "win": 50.91,
+   "pick": 16.46,
+   "ban": 0.76
+  },
+  {
+   "name": "Zed",
+   "lane": "Jungle",
+   "win": 50.9,
+   "pick": 2.52,
+   "ban": 2.78
+  },
+  {
+   "name": "Ornn",
+   "lane": "Baron",
+   "win": 50.85,
+   "pick": 2.14,
+   "ban": 0.22
+  },
+  {
+   "name": "Zilean",
+   "lane": "Support",
+   "win": 50.67,
+   "pick": 1.07,
+   "ban": 0.83
+  },
+  {
+   "name": "Ahri",
+   "lane": "Mid",
+   "win": 50.58,
+   "pick": 5.0,
+   "ban": 0.19
+  },
+  {
+   "name": "Ezreal",
+   "lane": "Duo",
+   "win": 50.51,
+   "pick": 9.69,
+   "ban": 0.35
+  },
+  {
+   "name": "Annie",
+   "lane": "Mid",
+   "win": 50.51,
+   "pick": 2.44,
+   "ban": 0.16
+  },
+  {
+   "name": "Zeri",
+   "lane": "Duo",
+   "win": 50.49,
+   "pick": 1.16,
+   "ban": 0.02
+  },
+  {
+   "name": "Taliyah",
+   "lane": "Mid",
+   "win": 50.48,
+   "pick": 1.82,
+   "ban": 0.85
+  },
+  {
+   "name": "Riven",
+   "lane": "Baron",
+   "win": 49.99,
+   "pick": 1.88,
+   "ban": 0.36
+  },
+  {
+   "name": "Ornn",
+   "lane": "Support",
+   "win": 49.91,
+   "pick": 1.39,
+   "ban": 0.22
+  },
+  {
+   "name": "Cho'Gath",
+   "lane": "Jungle",
+   "win": 49.89,
+   "pick": 8.04,
+   "ban": 35.19
+  },
+  {
+   "name": "Hecarim",
+   "lane": "Jungle",
+   "win": 49.69,
+   "pick": 1.69,
+   "ban": 1.34
+  },
+  {
+   "name": "Pyke",
+   "lane": "Support",
+   "win": 49.54,
+   "pick": 3.66,
+   "ban": 2.95
+  },
+  {
+   "name": "Nidalee",
+   "lane": "Jungle",
+   "win": 49.39,
+   "pick": 2.39,
+   "ban": 2.53
+  },
+  {
+   "name": "Poppy",
+   "lane": "Baron",
+   "win": 49.27,
+   "pick": 1.53,
+   "ban": 0.21
+  },
+  {
+   "name": "Rakan",
+   "lane": "Support",
+   "win": 48.98,
+   "pick": 3.03,
+   "ban": 0.34
+  },
+  {
+   "name": "Lee Sin",
+   "lane": "Jungle",
+   "win": 48.77,
+   "pick": 15.89,
+   "ban": 9.98
+  },
+  {
+   "name": "Gwen",
+   "lane": "Jungle",
+   "win": 53.49,
+   "pick": 2.43,
+   "ban": 4.25
+  },
+  {
+   "name": "Shyvana",
+   "lane": "Jungle",
+   "win": 53.07,
+   "pick": 6.05,
+   "ban": 1.38
+  },
+  {
+   "name": "Teemo",
+   "lane": "Baron",
+   "win": 52.98,
+   "pick": 5.16,
+   "ban": 23.88
+  },
+  {
+   "name": "Teemo",
+   "lane": "Mid",
+   "win": 52.97,
+   "pick": 2.34,
+   "ban": 23.88
+  },
+  {
+   "name": "Zyra",
+   "lane": "Mid",
+   "win": 52.38,
+   "pick": 3.22,
+   "ban": 37.53
+  },
+  {
+   "name": "Morgana",
+   "lane": "Mid",
+   "win": 52.32,
+   "pick": 6.36,
+   "ban": 40.81
+  },
+  {
+   "name": "Vladimir",
+   "lane": "Mid",
+   "win": 52.03,
+   "pick": 4.55,
+   "ban": 2.02
+  },
+  {
+   "name": "Brand",
+   "lane": "Mid",
+   "win": 52.0,
+   "pick": 11.08,
+   "ban": 12.03
+  },
+  {
+   "name": "Vayne",
+   "lane": "Baron",
+   "win": 51.9,
+   "pick": 1.71,
+   "ban": 6.05
+  },
+  {
+   "name": "Varus",
+   "lane": "Duo",
+   "win": 51.37,
+   "pick": 6.74,
+   "ban": 0.45
+  },
+  {
+   "name": "Kayn",
+   "lane": "Jungle",
+   "win": 51.37,
+   "pick": 6.29,
+   "ban": 3.37
+  },
+  {
+   "name": "Ekko",
+   "lane": "Mid",
+   "win": 51.1,
+   "pick": 2.95,
+   "ban": 2.96
+  },
+  {
+   "name": "Corki",
+   "lane": "Duo",
+   "win": 51.01,
+   "pick": 1.27,
+   "ban": 0.02
+  },
+  {
+   "name": "Zed",
+   "lane": "Mid",
+   "win": 50.94,
+   "pick": 4.37,
+   "ban": 2.78
+  },
+  {
+   "name": "Kindred",
+   "lane": "Jungle",
+   "win": 50.93,
+   "pick": 2.25,
+   "ban": 0.36
+  },
+  {
+   "name": "Kalista",
+   "lane": "Duo",
+   "win": 50.8,
+   "pick": 7.74,
+   "ban": 13.68
+  },
+  {
+   "name": "Darius",
+   "lane": "Jungle",
+   "win": 50.77,
+   "pick": 6.21,
+   "ban": 14.17
+  },
+  {
+   "name": "Kennen",
+   "lane": "Baron",
+   "win": 50.67,
+   "pick": 2.4,
+   "ban": 0.69
+  },
+  {
+   "name": "Maokai",
+   "lane": "Support",
+   "win": 50.63,
+   "pick": 4.91,
+   "ban": 0.66
+  },
+  {
+   "name": "Olaf",
+   "lane": "Jungle",
+   "win": 50.61,
+   "pick": 1.93,
+   "ban": 1.68
+  },
+  {
+   "name": "Karma",
+   "lane": "Support",
+   "win": 50.57,
+   "pick": 4.72,
+   "ban": 0.48
+  },
+  {
+   "name": "Jayce",
+   "lane": "Baron",
+   "win": 50.53,
+   "pick": 4.81,
+   "ban": 3.38
+  },
+  {
+   "name": "Wukong",
+   "lane": "Baron",
+   "win": 50.52,
+   "pick": 1.47,
+   "ban": 0.45
+  },
+  {
+   "name": "Aurora",
+   "lane": "Mid",
+   "win": 50.52,
+   "pick": 4.38,
+   "ban": 4.5
+  },
+  {
+   "name": "Xin Zhao",
+   "lane": "Jungle",
+   "win": 50.52,
+   "pick": 9.21,
+   "ban": 1.77
+  },
+  {
+   "name": "Kennen",
+   "lane": "Mid",
+   "win": 50.49,
+   "pick": 1.61,
+   "ban": 0.69
+  },
+  {
+   "name": "Yone",
+   "lane": "Baron",
+   "win": 50.46,
+   "pick": 5.3,
+   "ban": 8.48
+  },
+  {
+   "name": "Dr. Mundo",
+   "lane": "Baron",
+   "win": 50.44,
+   "pick": 6.49,
+   "ban": 2.59
+  },
+  {
+   "name": "Olaf",
+   "lane": "Baron",
+   "win": 50.42,
+   "pick": 1.41,
+   "ban": 1.68
+  },
+  {
+   "name": "Pantheon",
+   "lane": "Jungle",
+   "win": 50.37,
+   "pick": 6.57,
+   "ban": 4.35
+  },
+  {
+   "name": "Sett",
+   "lane": "Baron",
+   "win": 50.34,
+   "pick": 8.05,
+   "ban": 1.6
+  },
+  {
+   "name": "Veigar",
+   "lane": "Mid",
+   "win": 50.34,
+   "pick": 9.02,
+   "ban": 12.74
+  },
+  {
+   "name": "Norra",
+   "lane": "Mid",
+   "win": 50.32,
+   "pick": 1.26,
+   "ban": 6.78
+  },
+  {
+   "name": "Sivir",
+   "lane": "Duo",
+   "win": 50.27,
+   "pick": 5.14,
+   "ban": 0.1
+  },
+  {
+   "name": "Vel'Koz",
+   "lane": "Mid",
+   "win": 50.24,
+   "pick": 3.31,
+   "ban": 0.8
+  },
+  {
+   "name": "Fiora",
+   "lane": "Baron",
+   "win": 50.19,
+   "pick": 3.43,
+   "ban": 0.7
+  },
+  {
+   "name": "Kha'Zix",
+   "lane": "Jungle",
+   "win": 50.16,
+   "pick": 5.35,
+   "ban": 0.45
+  },
+  {
+   "name": "Diana",
+   "lane": "Jungle",
+   "win": 50.11,
+   "pick": 1.33,
+   "ban": 0.15
+  },
+  {
+   "name": "Wukong",
+   "lane": "Jungle",
+   "win": 50.04,
+   "pick": 3.22,
+   "ban": 0.45
+  },
+  {
+   "name": "Gnar",
+   "lane": "Baron",
+   "win": 50.01,
+   "pick": 3.49,
+   "ban": 0.58
+  },
+  {
+   "name": "Jinx",
+   "lane": "Duo",
+   "win": 49.96,
+   "pick": 13.06,
+   "ban": 0.55
+  },
+  {
+   "name": "Heimerdinger",
+   "lane": "Mid",
+   "win": 49.94,
+   "pick": 1.79,
+   "ban": 1.69
+  },
+  {
+   "name": "Fiddlesticks",
+   "lane": "Jungle",
+   "win": 49.89,
+   "pick": 1.78,
+   "ban": 0.72
+  },
+  {
+   "name": "Talon",
+   "lane": "Jungle",
+   "win": 49.85,
+   "pick": 2.62,
+   "ban": 1.48
+  },
+  {
+   "name": "Aatrox",
+   "lane": "Baron",
+   "win": 49.82,
+   "pick": 7.51,
+   "ban": 9.04
+  },
+  {
+   "name": "Nautilus",
+   "lane": "Support",
+   "win": 49.73,
+   "pick": 14.3,
+   "ban": 5.12
+  },
+  {
+   "name": "Twisted Fate",
+   "lane": "Mid",
+   "win": 49.71,
+   "pick": 4.81,
+   "ban": 0.72
+  },
+  {
+   "name": "Jhin",
+   "lane": "Duo",
+   "win": 49.65,
+   "pick": 16.03,
+   "ban": 1.18
+  },
+  {
+   "name": "Vex",
+   "lane": "Mid",
+   "win": 49.61,
+   "pick": 2.06,
+   "ban": 0.54
+  },
+  {
+   "name": "Warwick",
+   "lane": "Jungle",
+   "win": 49.57,
+   "pick": 1.86,
+   "ban": 0.51
+  },
+  {
+   "name": "Seraphine",
+   "lane": "Support",
+   "win": 49.56,
+   "pick": 6.4,
+   "ban": 1.21
+  },
+  {
+   "name": "Yone",
+   "lane": "Mid",
+   "win": 49.56,
+   "pick": 4.86,
+   "ban": 8.48
+  },
+  {
+   "name": "Caitlyn",
+   "lane": "Duo",
+   "win": 49.55,
+   "pick": 20.77,
+   "ban": 4.4
+  },
+  {
+   "name": "Darius",
+   "lane": "Baron",
+   "win": 49.46,
+   "pick": 15.03,
+   "ban": 14.17
+  },
+  {
+   "name": "Jayce",
+   "lane": "Mid",
+   "win": 49.34,
+   "pick": 2.15,
+   "ban": 3.38
+  },
+  {
+   "name": "Renekton",
+   "lane": "Baron",
+   "win": 49.27,
+   "pick": 3.4,
+   "ban": 0.38
+  },
+  {
+   "name": "Senna",
+   "lane": "Support",
+   "win": 49.21,
+   "pick": 6.18,
+   "ban": 6.68
+  },
+  {
+   "name": "Samira",
+   "lane": "Duo",
+   "win": 49.21,
+   "pick": 7.21,
+   "ban": 9.22
+  },
+  {
+   "name": "Camille",
+   "lane": "Baron",
+   "win": 49.17,
+   "pick": 2.32,
+   "ban": 0.14
+  },
+  {
+   "name": "Milio",
+   "lane": "Support",
+   "win": 49.09,
+   "pick": 3.29,
+   "ban": 3.82
+  },
+  {
+   "name": "Blitzcrank",
+   "lane": "Support",
+   "win": 49.0,
+   "pick": 7.29,
+   "ban": 2.46
+  },
+  {
+   "name": "Vi",
+   "lane": "Jungle",
+   "win": 48.94,
+   "pick": 5.0,
+   "ban": 0.82
+  },
+  {
+   "name": "Yunara",
+   "lane": "Duo",
+   "win": 48.94,
+   "pick": 7.16,
+   "ban": 8.21
+  },
+  {
+   "name": "Rengar",
+   "lane": "Jungle",
+   "win": 48.86,
+   "pick": 2.11,
+   "ban": 1.62
+  },
+  {
+   "name": "Tristana",
+   "lane": "Duo",
+   "win": 48.68,
+   "pick": 9.77,
+   "ban": 0.4
+  },
+  {
+   "name": "Volibear",
+   "lane": "Baron",
+   "win": 48.57,
+   "pick": 6.24,
+   "ban": 7.03
+  },
+  {
+   "name": "Lulu",
+   "lane": "Support",
+   "win": 48.54,
+   "pick": 9.05,
+   "ban": 10.06
+  },
+  {
+   "name": "Akali",
+   "lane": "Mid",
+   "win": 48.49,
+   "pick": 5.72,
+   "ban": 1.56
+  },
+  {
+   "name": "Yuumi",
+   "lane": "Support",
+   "win": 48.47,
+   "pick": 7.68,
+   "ban": 33.86
+  },
+  {
+   "name": "Evelynn",
+   "lane": "Jungle",
+   "win": 48.34,
+   "pick": 1.94,
+   "ban": 1.08
+  },
+  {
+   "name": "Vayne",
+   "lane": "Duo",
+   "win": 48.14,
+   "pick": 6.12,
+   "ban": 6.05
+  },
+  {
+   "name": "Riven",
+   "lane": "Jungle",
+   "win": 47.3,
+   "pick": 1.27,
+   "ban": 0.36
+  },
+  {
+   "name": "Irelia",
+   "lane": "Baron",
+   "win": 47.27,
+   "pick": 1.31,
+   "ban": 0.84
+  },
+  {
+   "name": "Ryze",
+   "lane": "Mid",
+   "win": 47.1,
+   "pick": 2.78,
+   "ban": 1.32
+  },
+  {
+   "name": "Aatrox",
+   "lane": "Jungle",
+   "win": 45.4,
+   "pick": 1.16,
+   "ban": 9.04
+  },
+  {
+   "name": "Brand",
+   "lane": "Support",
+   "win": 52.79,
+   "pick": 3.06,
+   "ban": 12.03
+  },
+  {
+   "name": "Dr. Mundo",
+   "lane": "Jungle",
+   "win": 52.29,
+   "pick": 1.78,
+   "ban": 2.59
+  },
+  {
+   "name": "Swain",
+   "lane": "Mid",
+   "win": 50.96,
+   "pick": 2.5,
+   "ban": 3.68
+  },
+  {
+   "name": "Twitch",
+   "lane": "Duo",
+   "win": 50.81,
+   "pick": 8.43,
+   "ban": 4.62
+  },
+  {
+   "name": "Zyra",
+   "lane": "Support",
+   "win": 50.76,
+   "pick": 5.18,
+   "ban": 37.53
+  },
+  {
+   "name": "Morgana",
+   "lane": "Support",
+   "win": 50.65,
+   "pick": 6.77,
+   "ban": 40.81
+  },
+  {
+   "name": "Viktor",
+   "lane": "Mid",
+   "win": 50.01,
+   "pick": 3.18,
+   "ban": 0.68
+  },
+  {
+   "name": "Sion",
+   "lane": "Baron",
+   "win": 49.55,
+   "pick": 2.81,
+   "ban": 0.34
+  },
+  {
+   "name": "Katarina",
+   "lane": "Mid",
+   "win": 49.45,
+   "pick": 1.4,
+   "ban": 0.46
+  },
+  {
+   "name": "Alistar",
+   "lane": "Support",
+   "win": 49.37,
+   "pick": 4.34,
+   "ban": 0.7
+  },
+  {
+   "name": "Vel'Koz",
+   "lane": "Support",
+   "win": 49.36,
+   "pick": 1.69,
+   "ban": 0.8
+  },
+  {
+   "name": "Kayle",
+   "lane": "Baron",
+   "win": 49.3,
+   "pick": 1.93,
+   "ban": 0.28
+  },
+  {
+   "name": "Urgot",
+   "lane": "Baron",
+   "win": 49.02,
+   "pick": 4.04,
+   "ban": 2.12
+  },
+  {
+   "name": "Garen",
+   "lane": "Baron",
+   "win": 48.98,
+   "pick": 12.03,
+   "ban": 2.49
+  },
+  {
+   "name": "Miss Fortune",
+   "lane": "Duo",
+   "win": 48.93,
+   "pick": 10.88,
+   "ban": 2.07
+  },
+  {
+   "name": "Lux",
+   "lane": "Mid",
+   "win": 48.92,
+   "pick": 5.85,
+   "ban": 16.96
+  },
+  {
+   "name": "Rumble",
+   "lane": "Baron",
+   "win": 48.84,
+   "pick": 1.96,
+   "ban": 0.35
+  },
+  {
+   "name": "Volibear",
+   "lane": "Jungle",
+   "win": 48.82,
+   "pick": 3.33,
+   "ban": 7.03
+  },
+  {
+   "name": "Jax",
+   "lane": "Jungle",
+   "win": 48.82,
+   "pick": 1.93,
+   "ban": 0.49
+  },
+  {
+   "name": "Ziggs",
+   "lane": "Mid",
+   "win": 48.08,
+   "pick": 5.34,
+   "ban": 2.49
+  },
+  {
+   "name": "Yone",
+   "lane": "Jungle",
+   "win": 48.08,
+   "pick": 2.32,
+   "ban": 8.48
+  },
+  {
+   "name": "Fizz",
+   "lane": "Jungle",
+   "win": 47.91,
+   "pick": 1.87,
+   "ban": 2.93
+  },
+  {
+   "name": "Draven",
+   "lane": "Duo",
+   "win": 47.65,
+   "pick": 5.41,
+   "ban": 3.01
+  },
+  {
+   "name": "Lucian",
+   "lane": "Duo",
+   "win": 47.35,
+   "pick": 3.39,
+   "ban": 0.04
+  },
+  {
+   "name": "Viego",
+   "lane": "Jungle",
+   "win": 47.29,
+   "pick": 4.4,
+   "ban": 2.65
+  },
+  {
+   "name": "Yasuo",
+   "lane": "Mid",
+   "win": 47.25,
+   "pick": 8.46,
+   "ban": 9.77
+  },
+  {
+   "name": "Nasus",
+   "lane": "Baron",
+   "win": 46.88,
+   "pick": 6.38,
+   "ban": 2.83
+  },
+  {
+   "name": "Mel",
+   "lane": "Mid",
+   "win": 45.41,
+   "pick": 7.68,
+   "ban": 27.6
+  },
+  {
+   "name": "Lux",
+   "lane": "Support",
+   "win": 49.48,
+   "pick": 8.87,
+   "ban": 16.96
+  },
+  {
+   "name": "Tryndamere",
+   "lane": "Jungle",
+   "win": 48.56,
+   "pick": 8.59,
+   "ban": 25.32
+  },
+  {
+   "name": "Fizz",
+   "lane": "Mid",
+   "win": 48.51,
+   "pick": 2.38,
+   "ban": 2.93
+  },
+  {
+   "name": "Graves",
+   "lane": "Jungle",
+   "win": 48.02,
+   "pick": 7.42,
+   "ban": 0.75
+  },
+  {
+   "name": "Master Yi",
+   "lane": "Jungle",
+   "win": 47.99,
+   "pick": 10.22,
+   "ban": 53.92
+  },
+  {
+   "name": "Diana",
+   "lane": "Mid",
+   "win": 47.71,
+   "pick": 1.09,
+   "ban": 0.15
+  },
+  {
+   "name": "Tryndamere",
+   "lane": "Baron",
+   "win": 45.71,
+   "pick": 2.51,
+   "ban": 25.32
+  },
+  {
+   "name": "Yasuo",
+   "lane": "Baron",
+   "win": 45.67,
+   "pick": 1.85,
+   "ban": 9.77
+  },
+  {
+   "name": "Shen",
+   "lane": "Jungle",
+   "win": 55.16,
+   "pick": 1.48,
+   "ban": 0.96
+  },
+  {
+   "name": "Nunu & Willump",
+   "lane": "Jungle",
+   "win": 53.69,
+   "pick": 1.69,
+   "ban": 0.69
+  },
+  {
+   "name": "Kalista",
+   "lane": "Baron",
+   "win": 53.47,
+   "pick": 3.1,
+   "ban": 13.68
+  },
+  {
+   "name": "Smolder",
+   "lane": "Baron",
+   "win": 52.18,
+   "pick": 1.87,
+   "ban": 5.2
+  },
+  {
+   "name": "Hwei",
+   "lane": "Support",
+   "win": 51.58,
+   "pick": 1.51,
+   "ban": 41.81
+  },
+  {
+   "name": "Malphite",
+   "lane": "Support",
+   "win": 51.06,
+   "pick": 9.87,
+   "ban": 41.22
+  },
+  {
+   "name": "Tristana",
+   "lane": "Baron",
+   "win": 50.78,
+   "pick": 1.0,
+   "ban": 0.4
+  },
+  {
+   "name": "Sett",
+   "lane": "Support",
+   "win": 50.56,
+   "pick": 1.65,
+   "ban": 1.6
+  },
+  {
+   "name": "Vladimir",
+   "lane": "Baron",
+   "win": 50.31,
+   "pick": 1.13,
+   "ban": 2.02
+  },
+  {
+   "name": "Nautilus",
+   "lane": "Baron",
+   "win": 49.83,
+   "pick": 1.34,
+   "ban": 5.12
+  },
+  {
+   "name": "Nasus",
+   "lane": "Mid",
+   "win": 49.65,
+   "pick": 1.13,
+   "ban": 2.83
+  },
+  {
+   "name": "Veigar",
+   "lane": "Support",
+   "win": 48.24,
+   "pick": 3.37,
+   "ban": 12.74
+  },
+  {
+   "name": "Tristana",
+   "lane": "Mid",
+   "win": 47.47,
+   "pick": 1.31,
+   "ban": 0.4
+  },
+  {
+   "name": "Twitch",
+   "lane": "Jungle",
+   "win": 47.33,
+   "pick": 1.83,
+   "ban": 4.62
+  },
+  {
+   "name": "Swain",
+   "lane": "Support",
+   "win": 46.53,
+   "pick": 3.53,
+   "ban": 3.68
+  }
+ ]
+}
