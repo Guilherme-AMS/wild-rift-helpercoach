@@ -1,0 +1,22 @@
+name: Probe
+on: workflow_dispatch
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          UA="Mozilla/5.0 (Linux; Android 14) RiftHelperFanApp/1.0"
+          curl -sSL -A "$UA" -o ahri.html -w "status=%{http_code} size=%{size_download}\n" https://www.wildriftfire.com/guide/ahri
+          curl -sSL -A "$UA" -o list.html -w "status=%{http_code} size=%{size_download}\n" https://www.wildriftfire.com/
+          echo "=== countered context ==="
+          python3 - << 'PY'
+          import re
+          h=open('ahri.html',encoding='utf-8',errors='ignore').read()
+          for kw in ['Countered By','Synergizes','Luden','Electrocute','Flash']:
+              i=h.find(kw)
+              print('-----',kw,i)
+              if i>=0: print(h[max(0,i-1500):i+2500])
+          l=open('list.html',encoding='utf-8',errors='ignore').read()
+          links=sorted(set(re.findall(r'href="(/guide/[^"#?]+)"',l)))
+          print('GUIDE LINKS',len(links)); print(links)
+          PY
