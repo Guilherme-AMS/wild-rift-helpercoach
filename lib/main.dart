@@ -10,6 +10,9 @@ import 'package:flutter/services.dart' show MethodChannel, rootBundle;
 const String kRemoteDataUrl =
     'https://raw.githubusercontent.com/Guilherme-AMS/wild-rift-helpercoach/main/assets/meta.json';
 
+const String kRemoteGuidesUrl =
+    'https://raw.githubusercontent.com/Guilherme-AMS/wild-rift-helpercoach/main/assets/guides.json';
+
 void main() => runApp(const WildRiftApp());
 
 const List<String> kLanes = ['Baron', 'Jungle', 'Mid', 'Duo', 'Support'];
@@ -114,6 +117,29 @@ class MetaData {
     return set;
   }
 
+  double pickRate(String name, String lane) {
+    for (final s in stats) {
+      if (s.name == name && s.lane == lane) return s.pick;
+    }
+    return 0;
+  }
+
+  ChampStat? statIn(String name, String lane) {
+    for (final s in stats) {
+      if (s.name == name && s.lane == lane) return s;
+    }
+    return null;
+  }
+
+  /// Converte um nome vindo de outra fonte para o nome usado nas estatísticas.
+  String resolve(String name) {
+    final n = normName(name);
+    for (final c in champions) {
+      if (normName(c) == n) return c;
+    }
+    return name;
+  }
+
   List<ChampStat> statsOf(String name) {
     final list = stats.where((s) => s.name == name).toList();
     list.sort((a, b) => b.pick.compareTo(a.pick));
@@ -139,6 +165,110 @@ Future<MetaData?> loadRemote() async {
   } catch (_) {
     return null;
   }
+}
+
+String normName(String s) => s.toLowerCase().replaceAll(RegExp('[^a-z]'), '');
+
+class Guide {
+  Guide(this.name, this.role, this.counteredBy, this.synergy, this.items,
+      this.spells, this.runes);
+
+  factory Guide.fromJson(String name, Map<String, dynamic> j) {
+    List<String> ls(dynamic v) =>
+        v is List ? v.map((e) => e.toString()).toList() : <String>[];
+    final items = <String, List<String>>{};
+    final it = j['items'];
+    if (it is Map) {
+      it.forEach((k, v) => items[k.toString()] = ls(v));
+    }
+    return Guide(name, j['role']?.toString() ?? '', ls(j['counteredBy']),
+        ls(j['synergy']), items, ls(j['spells']), ls(j['runes']));
+  }
+
+  final String name;
+  final String role;
+  final List<String> counteredBy;
+  final List<String> synergy;
+  final Map<String, List<String>> items;
+  final List<String> spells;
+  final List<String> runes;
+}
+
+class GuideData {
+  GuideData(this.patch, this.updated, this.byNorm, this.raw);
+
+  factory GuideData.parse(String raw) {
+    final j = jsonDecode(raw) as Map<String, dynamic>;
+    final map = <String, Guide>{};
+    final g = j['guides'];
+    if (g is Map) {
+      g.forEach((k, v) {
+        map[normName(k.toString())] =
+            Guide.fromJson(k.toString(), v as Map<String, dynamic>);
+      });
+    }
+    return GuideData(j['patch']?.toString() ?? '', j['updated']?.toString() ?? '',
+        map, raw);
+  }
+
+  factory GuideData.empty() => GuideData('', '', {}, '');
+
+  final String patch;
+  final String updated;
+  final Map<String, Guide> byNorm;
+  final String raw;
+
+  Guide? of(String name) => byNorm[normName(name)];
+}
+
+Future<GuideData> loadGuidesBundled() async {
+  try {
+    return GuideData.parse(await rootBundle.loadString('assets/guides.json'));
+  } catch (_) {
+    return GuideData.empty();
+  }
+}
+
+Future<GuideData?> loadGuidesRemote() async {
+  try {
+    final client = HttpClient()..connectionTimeout = const Duration(seconds: 6);
+    final req = await client.getUrl(Uri.parse(kRemoteGuidesUrl));
+    final res = await req.close();
+    if (res.statusCode != 200) return null;
+    final body = await res.transform(utf8.decoder).join();
+    client.close();
+    final g = GuideData.parse(body);
+    return g.byNorm.isEmpty ? null : g;
+  } catch (_) {
+    return null;
+  }
+}
+
+/// Distribui os campeões inimigos pelas rotas, maximizando a taxa de escolha
+/// de cada um na rota. Devolve rota -> campeão.
+Map<String, String> assignLanes(MetaData data, List<String> champs) {
+  final cs = champs.take(5).toList();
+  var best = -1.0;
+  var bestMap = <String, String>{};
+  final cur = <String, String>{};
+  void rec(int i, double sum) {
+    if (i == cs.length) {
+      if (sum > best) {
+        best = sum;
+        bestMap = Map<String, String>.of(cur);
+      }
+      return;
+    }
+    for (final l in kLanes) {
+      if (cur.containsKey(l)) continue;
+      cur[l] = cs[i];
+      rec(i + 1, sum + data.pickRate(cs[i], l) + 0.001);
+      cur.remove(l);
+    }
+  }
+
+  rec(0, 0);
+  return bestMap;
 }
 
 // ---------------------------------------------------------------- app
@@ -170,6 +300,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   MetaData? _data;
+  GuideData _guides = GuideData.empty();
   int _tab = 0;
   bool _updating = false;
 
@@ -181,8 +312,12 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _init() async {
     final bundled = await loadBundled();
+    final guides = await loadGuidesBundled();
     if (!mounted) return;
-    setState(() => _data = bundled);
+    setState(() {
+      _data = bundled;
+      _guides = guides;
+    });
     await _refresh(silent: true);
   }
 
@@ -214,7 +349,8 @@ class _HomePageState extends State<HomePage> {
         if (ok == true) await _overlay.invokeMethod('requestPermission');
         return;
       }
-      await _overlay.invokeMethod('start', {'json': data.raw});
+      await _overlay
+          .invokeMethod('start', {'json': data.raw, 'guides': _guides.raw});
       if (!mounted) return;
       await showDialog<void>(
         context: context,
@@ -242,10 +378,12 @@ class _HomePageState extends State<HomePage> {
   Future<void> _refresh({bool silent = false}) async {
     setState(() => _updating = true);
     final remote = await loadRemote();
+    final remoteGuides = await loadGuidesRemote();
     if (!mounted) return;
     setState(() {
       _updating = false;
       if (remote != null) _data = remote;
+      if (remoteGuides != null) _guides = remoteGuides;
     });
     if (!silent) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -293,9 +431,9 @@ class _HomePageState extends State<HomePage> {
           : IndexedStack(
               index: _tab,
               children: [
-                TierListPage(data: data),
-                DraftPage(data: data),
-                AboutPage(data: data),
+                TierListPage(data: data, guides: _guides),
+                DraftPage(data: data, guides: _guides),
+                AboutPage(data: data, guides: _guides),
               ],
             ),
       bottomNavigationBar: NavigationBar(
@@ -378,9 +516,10 @@ String pct(double v) => '${v.toStringAsFixed(1)}%';
 enum SortBy { tier, win, pick, ban }
 
 class TierListPage extends StatefulWidget {
-  const TierListPage({super.key, required this.data});
+  const TierListPage({super.key, required this.data, required this.guides});
 
   final MetaData data;
+  final GuideData guides;
 
   @override
   State<TierListPage> createState() => _TierListPageState();
@@ -477,7 +616,8 @@ class _TierListPageState extends State<TierListPage> {
                       subtitle: Text(
                           'Vitória ${pct(s.win)} · Escolha ${pct(s.pick)} · Ban ${pct(s.ban)}'),
                       trailing: TierBadge(s.tier),
-                      onTap: () => showChampSheet(context, widget.data, s.name),
+                      onTap: () =>
+                          showChampSheet(context, widget.data, widget.guides, s.name),
                     );
                   },
                 ),
@@ -487,26 +627,56 @@ class _TierListPageState extends State<TierListPage> {
   }
 }
 
-void showChampSheet(BuildContext context, MetaData data, String name) {
+void showChampSheet(
+    BuildContext context, MetaData data, GuideData guides, String name) {
   final rows = data.statsOf(name);
+  final guide = guides.of(name);
+  final t = Theme.of(context).textTheme;
+
+  Widget chips(List<String> items) => Wrap(
+        spacing: 6,
+        runSpacing: 6,
+        children: [for (final i in items) Chip(label: Text(i), visualDensity: VisualDensity.compact)],
+      );
+
+  Widget champRow(List<String> names) => Wrap(
+        spacing: 12,
+        runSpacing: 8,
+        children: [
+          for (final n in names)
+            Column(mainAxisSize: MainAxisSize.min, children: [
+              ChampAvatar(
+                  name: n,
+                  tier: data.statsOf(data.resolve(n)).isEmpty
+                      ? null
+                      : data.statsOf(data.resolve(n)).first.tier,
+                  size: 40),
+              const SizedBox(height: 4),
+              Text(n, style: const TextStyle(fontSize: 12)),
+            ]),
+        ],
+      );
+
   showModalBottomSheet<void>(
     context: context,
     showDragHandle: true,
-    builder: (context) => Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    isScrollControlled: true,
+    builder: (context) => DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.7,
+      maxChildSize: 0.95,
+      builder: (context, controller) => ListView(
+        controller: controller,
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
         children: [
           Row(children: [
-            ChampAvatar(name: name, tier: rows.first.tier, size: 52),
+            ChampAvatar(
+                name: name, tier: rows.isEmpty ? null : rows.first.tier, size: 52),
             const SizedBox(width: 14),
-            Text(name, style: Theme.of(context).textTheme.headlineSmall),
+            Expanded(child: Text(name, style: t.headlineSmall)),
           ]),
           const SizedBox(height: 16),
-          Text('Desempenho por rota',
-              style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 8),
+          Text('Desempenho por rota', style: t.titleSmall),
           for (final s in rows)
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -516,6 +686,46 @@ void showChampSheet(BuildContext context, MetaData data, String name) {
                   'Vitória ${pct(s.win)} · Escolha ${pct(s.pick)} · Ban ${pct(s.ban)}'),
               trailing: TierBadge(s.tier),
             ),
+          if (guide != null) ...[
+            if (guide.counteredBy.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('Counters (quem ganha de $name)', style: t.titleSmall),
+              const SizedBox(height: 8),
+              champRow(guide.counteredBy),
+            ],
+            if ((guide.items['core'] ?? []).isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Text('Itens principais', style: t.titleSmall),
+              const SizedBox(height: 6),
+              chips(guide.items['core']!),
+            ],
+            if ((guide.items['final'] ?? []).isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('Build completa', style: t.titleSmall),
+              const SizedBox(height: 6),
+              chips(guide.items['final']!),
+            ],
+            if (guide.runes.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('Runas', style: t.titleSmall),
+              const SizedBox(height: 6),
+              chips(guide.runes),
+            ],
+            if (guide.spells.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('Feitiços', style: t.titleSmall),
+              const SizedBox(height: 6),
+              chips(guide.spells),
+            ],
+            if (guide.synergy.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('Combina bem com', style: t.titleSmall),
+              const SizedBox(height: 8),
+              champRow(guide.synergy),
+            ],
+            const SizedBox(height: 12),
+            Text('Builds e counters: WildRiftFire', style: t.bodySmall),
+          ],
         ],
       ),
     ),
@@ -525,9 +735,10 @@ void showChampSheet(BuildContext context, MetaData data, String name) {
 // ---------------------------------------------------------------- draft
 
 class DraftPage extends StatefulWidget {
-  const DraftPage({super.key, required this.data});
+  const DraftPage({super.key, required this.data, required this.guides});
 
   final MetaData data;
+  final GuideData guides;
 
   @override
   State<DraftPage> createState() => _DraftPageState();
@@ -538,6 +749,7 @@ class _DraftPageState extends State<DraftPage> {
   final List<String?> _enemy = List<String?>.filled(5, null);
   final List<String?> _bans = List<String?>.filled(10, null);
   String _myLane = 'Mid';
+  String? _opponent;
 
   Set<String> get _used => {
         ..._ally.whereType<String>(),
@@ -593,6 +805,94 @@ class _DraftPageState extends State<DraftPage> {
         child: name == null
             ? Icon(Icons.add, color: color, size: size * 0.45)
             : ChampAvatar(name: name, tier: tier, size: size - 4),
+      ),
+    );
+  }
+
+  Widget _counterCard(BuildContext context, Set<String> used) {
+    final t = Theme.of(context).textTheme;
+    final enemies = _enemy.whereType<String>().toList();
+    if (enemies.isEmpty) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Text(
+              'Marque os campeões inimigos para ver o counter do seu oponente de rota.',
+              style: t.bodyMedium),
+        ),
+      );
+    }
+    final inferred = assignLanes(widget.data, enemies)[_myLane];
+    final opponent =
+        (_opponent != null && enemies.contains(_opponent)) ? _opponent : inferred;
+    final guide = opponent == null ? null : widget.guides.of(opponent);
+    final counters = guide?.counteredBy ?? const <String>[];
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Counter do seu oponente de rota', style: t.titleSmall),
+            const SizedBox(height: 4),
+            Row(children: [
+              const Text('Oponente: '),
+              DropdownButton<String>(
+                value: opponent,
+                hint: const Text('escolher'),
+                items: [
+                  for (final e in enemies)
+                    DropdownMenuItem(
+                        value: e,
+                        child: Text(e == inferred ? '$e (provável)' : e)),
+                ],
+                onChanged: (v) => setState(() => _opponent = v),
+              ),
+            ]),
+            if (opponent == null)
+              const Text('Nenhum inimigo parece jogar nessa rota ainda.')
+            else if (counters.isEmpty)
+              Text('Sem dados de counter para $opponent.')
+            else
+              for (final c in counters)
+                Builder(builder: (context) {
+                  final name = widget.data.resolve(c);
+                  final inLane = widget.data.statIn(name, _myLane);
+                  final main = widget.data.statsOf(name);
+                  final taken = used.contains(name);
+                  final sub = inLane != null
+                      ? 'Na sua rota: ${inLane.tier} · Vitória ${pct(inLane.win)}'
+                      : main.isNotEmpty
+                          ? 'Joga mais de ${kLaneLabels[main.first.lane]}'
+                          : 'Sem estatísticas no patch';
+                  return Opacity(
+                    opacity: taken ? 0.4 : 1,
+                    child: ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      leading: ChampAvatar(
+                          name: name,
+                          tier: inLane?.tier ?? (main.isEmpty ? null : main.first.tier),
+                          size: 34),
+                      title: Text(name),
+                      subtitle: Text(taken ? 'Indisponível · $sub' : sub),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.info_outline),
+                        onPressed: () => showChampSheet(
+                            context, widget.data, widget.guides, name),
+                      ),
+                      onTap: taken
+                          ? null
+                          : () {
+                              final free = _ally.indexWhere((e) => e == null);
+                              if (free >= 0) setState(() => _ally[free] = name);
+                            },
+                    ),
+                  );
+                }),
+          ],
+        ),
       ),
     );
   }
@@ -713,6 +1013,7 @@ class _DraftPageState extends State<DraftPage> {
           onSelectionChanged: (v) => setState(() => _myLane = v.first),
         ),
         const SizedBox(height: 16),
+        _counterCard(context, used),
         Card(
           child: Padding(
             padding: const EdgeInsets.all(12),
@@ -905,9 +1206,10 @@ class _ChampPickerState extends State<ChampPicker> {
 // ---------------------------------------------------------------- sobre
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({super.key, required this.data});
+  const AboutPage({super.key, required this.data, required this.guides});
 
   final MetaData data;
+  final GuideData guides;
 
   @override
   Widget build(BuildContext context) {
@@ -919,6 +1221,8 @@ class AboutPage extends StatelessWidget {
         const SizedBox(height: 8),
         Text('Patch ${data.patch} · atualizado em ${data.updated}'),
         Text('Fonte: ${data.source}'),
+        Text('Counters e builds: WildRiftFire · ${guides.byNorm.length} campeões'
+            '${guides.updated.isEmpty ? '' : ' · ${guides.updated}'}'),
         Text('${data.champions.length} campeões · ${data.stats.length} combinações campeão/rota'),
         const SizedBox(height: 20),
         Text('Como o tier é calculado', style: t.titleMedium),
@@ -929,7 +1233,7 @@ class AboutPage extends StatelessWidget {
         Text('Limitações', style: t.titleMedium),
         const SizedBox(height: 6),
         const Text(
-            'A Riot não oferece API pública do Wild Rift, então o app não busca perfis de jogadores. Na bolha, o draft é lido pela tela só quando você toca em "Ler draft", reconhecendo os nomes dos campeões nas colunas dos times; os bans não são lidos. As sugestões usam as estatísticas gerais do patch, não confrontos diretos.'),
+            'A Riot não oferece API pública do Wild Rift, então o app não busca perfis de jogadores. Na bolha, o draft é lido pela tela só quando você toca em "Ler draft", reconhecendo os nomes dos campeões nas colunas dos times; os bans não são lidos. Os counters vêm das listas "Countered By" do WildRiftFire, atualizadas toda semana.'),
         const SizedBox(height: 20),
         Text(
             'Projeto de fã, sem vínculo com a Riot Games. League of Legends: Wild Rift é marca da Riot Games, Inc.',

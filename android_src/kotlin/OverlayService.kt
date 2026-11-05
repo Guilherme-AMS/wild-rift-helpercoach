@@ -58,6 +58,7 @@ class OverlayService : Service() {
 
         @Volatile var running = false
         @Volatile var pendingJson: String? = null
+        @Volatile var pendingGuides: String? = null
 
         private val LANES = listOf("Baron", "Jungle", "Mid", "Duo", "Support")
         private val LANE_LABELS = mapOf(
@@ -116,6 +117,62 @@ class OverlayService : Service() {
         }
     }
 
+    private class Guide(val counteredBy: List<String>, val core: List<String>)
+
+    private val guides = HashMap<String, Guide>()
+
+    private fun loadGuides(json: String) {
+        guides.clear()
+        val g = JSONObject(json).optJSONObject("guides") ?: return
+        val keys = g.keys()
+        while (keys.hasNext()) {
+            val k = keys.next()
+            val o = g.getJSONObject(k)
+            val c = o.optJSONArray("counteredBy")
+            val counters = mutableListOf<String>()
+            if (c != null) for (i in 0 until c.length()) counters.add(c.getString(i))
+            val core = mutableListOf<String>()
+            val items = o.optJSONObject("items")
+            val coreArr = items?.optJSONArray("core")
+            if (coreArr != null) for (i in 0 until coreArr.length()) core.add(coreArr.getString(i))
+            guides[norm(k)] = Guide(counters, core)
+        }
+    }
+
+    private fun loadBundledGuides(): String? = try {
+        assets.open("flutter_assets/assets/guides.json").bufferedReader().use { it.readText() }
+    } catch (e: Exception) { null }
+
+    private fun resolve(name: String): String {
+        val n = norm(name)
+        return stats.firstOrNull { norm(it.name) == n }?.name ?: name
+    }
+
+    private fun statIn(name: String, lane: String) =
+        stats.firstOrNull { it.name == name && it.lane == lane }
+
+    /** Distribui os inimigos pelas rotas maximizando a taxa de escolha. */
+    private fun assignLanes(champs: List<String>): Map<String, String> {
+        val cs = champs.take(5)
+        var best = -1.0
+        var bestMap = mapOf<String, String>()
+        val cur = HashMap<String, String>()
+        fun rec(i: Int, sum: Double) {
+            if (i == cs.size) {
+                if (sum > best) { best = sum; bestMap = HashMap(cur) }
+                return
+            }
+            for (l in LANES) {
+                if (cur.containsKey(l)) continue
+                cur[l] = cs[i]
+                rec(i + 1, sum + (statIn(cs[i], l)?.pick ?: 0.0) + 0.001)
+                cur.remove(l)
+            }
+        }
+        rec(0, 0.0)
+        return bestMap
+    }
+
     private fun loadBundled(): String =
         assets.open("flutter_assets/assets/meta.json").bufferedReader().use { it.readText() }
 
@@ -166,6 +223,7 @@ class OverlayService : Service() {
     private var enemies = listOf<String>()
     private var myLane = "Mid"
     private var swapSides = false
+    private var opponentOverride: String? = null
 
     // ------------------------------------------------------------ captura
 
@@ -322,6 +380,8 @@ class OverlayService : Service() {
     private var tvAllies: TextView? = null
     private var tvEnemies: TextView? = null
     private var tvSuggest: TextView? = null
+    private var tvCounters: TextView? = null
+    private var btnOpponent: Button? = null
     private var tvThreats: TextView? = null
     private var btnCapture: Button? = null
     private val laneButtons = mutableMapOf<String, Button>()
@@ -468,6 +528,17 @@ class OverlayService : Service() {
         val content = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
         tvAllies = label(12f); content.addView(tvAllies)
         tvEnemies = label(12f); content.addView(tvEnemies)
+        btnOpponent = smallButton("Oponente: —") {
+            val list = enemies
+            if (list.isNotEmpty()) {
+                val current = currentOpponent()
+                val idx = list.indexOf(current)
+                opponentOverride = list[(idx + 1) % list.size]
+                refreshPanel()
+            }
+        }
+        content.addView(btnOpponent)
+        tvCounters = label(12f, color = Color.parseColor("#FFD54F")); content.addView(tvCounters)
         tvSuggest = label(12f); content.addView(tvSuggest)
         tvThreats = label(12f); content.addView(tvThreats)
         val scroll = ScrollView(this).apply { addView(content) }
@@ -492,6 +563,7 @@ class OverlayService : Service() {
         panel?.let { try { windowManager.removeView(it) } catch (_: Exception) {} }
         panel = null
         tvStatus = null; tvAllies = null; tvEnemies = null; tvSuggest = null; tvThreats = null
+        tvCounters = null; btnOpponent = null
         btnCapture = null
         laneButtons.clear()
     }
@@ -499,6 +571,12 @@ class OverlayService : Service() {
     private fun setStatus(msg: String) {
         statusText = msg
         tvStatus?.text = msg
+    }
+
+    private fun currentOpponent(): String? {
+        val o = opponentOverride
+        if (o != null && o in enemies) return o
+        return assignLanes(enemies)[myLane]
     }
 
     private fun tierOf(name: String) = mainStat(name)?.tier ?: "?"
@@ -517,6 +595,35 @@ class OverlayService : Service() {
             (if (enemies.isEmpty()) "—" else enemies.joinToString(", ") { "$it (${tierOf(it)})" })
 
         val used = (allies + enemies).toSet()
+        val opponent = currentOpponent()
+        btnOpponent?.text = "Oponente: " + (opponent ?: "—") + if (enemies.size > 1) "  ▸" else ""
+        tvCounters?.text = when {
+            opponent == null -> "Counter: marque/leia os inimigos para ver o oponente da sua rota"
+            else -> {
+                val g = guides[norm(opponent)]
+                if (g == null || g.counteredBy.isEmpty()) "Sem dados de counter para $opponent"
+                else buildString {
+                    append("Counters de $opponent\n")
+                    var buildShown = false
+                    for (c in g.counteredBy) {
+                        val n = resolve(c)
+                        val st = statIn(n, myLane)
+                        append("• $n")
+                        if (st != null) append("  ${st.tier} · ${"%.1f".format(st.win)}%")
+                        else append("  (fora da rota)")
+                        if (n in used) append("  — indisponível")
+                        append("\n")
+                        if (!buildShown && n !in used) {
+                            val core = guides[norm(n)]?.core.orEmpty()
+                            if (core.isNotEmpty()) {
+                                append("   Build: ${core.joinToString(", ")}\n")
+                                buildShown = true
+                            }
+                        }
+                    }
+                }.trimEnd()
+            }
+        }
         val picks = byLane(myLane).filter { it.name !in used }.take(5)
         tvSuggest?.text = buildString {
             append("Melhores escolhas · ${LANE_LABELS[myLane]}\n")
@@ -617,6 +724,11 @@ class OverlayService : Service() {
             }
             else -> {
                 goForeground(false)
+                if (guides.isEmpty() || pendingGuides != null) {
+                    val gj = pendingGuides?.takeIf { it.isNotBlank() } ?: loadBundledGuides()
+                    try { if (gj != null) loadGuides(gj) } catch (_: Exception) {}
+                    pendingGuides = null
+                }
                 if (stats.isEmpty() || pendingJson != null) {
                     try {
                         loadData(pendingJson ?: loadBundled())

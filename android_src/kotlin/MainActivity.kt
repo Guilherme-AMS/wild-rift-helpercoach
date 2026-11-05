@@ -37,6 +37,7 @@ class MainActivity : FlutterActivity() {
                             requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 11)
                         }
                         OverlayService.pendingJson = call.argument<String>("json")
+                        OverlayService.pendingGuides = call.argument<String>("guides")
                         val i = Intent(this, OverlayService::class.java)
                             .setAction(OverlayService.ACTION_START)
                         if (Build.VERSION.SDK_INT >= 26) startForegroundService(i) else startService(i)

@@ -1,7 +1,7 @@
 name: wildrift_helper
 description: Tier list e assistente de draft para League of Legends Wild Rift.
 publish_to: 'none'
-version: 1.1.0+2
+version: 1.2.0+3
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -18,3 +18,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/meta.json
+    - assets/guides.json
